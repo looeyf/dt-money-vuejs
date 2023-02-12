@@ -16,9 +16,9 @@ const isOutcome = (transaction: Transaction) => transaction.type === 'outcome';
 <template>
   <div class="container pt-0">
     <div class="summary">
-      <Card type="Entradas" :amount="transactionsStore.incomes" />
-      <Card type="Saídas" :amount="transactionsStore.outcomes" />
-      <Card type="Total" :amount="transactionsStore.total" />
+      <Card type="Entradas" :amount="transactionsStore.summary.incomes" />
+      <Card type="Saídas" :amount="transactionsStore.summary.outcomes" />
+      <Card type="Total" :amount="transactionsStore.summary.total" />
     </div>
 
     <div class="table">

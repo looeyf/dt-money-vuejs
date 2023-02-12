@@ -6,21 +6,29 @@ interface Store {
   transactions: Transaction[];
 }
 
-const getAmountFromType = (type: 'income' | 'outcome', transaction: Transaction) =>
-  transaction.type === type ? transaction.amount : 0;
-
 export const useTransactionsStore = defineStore('transactions', {
   state: (): Store => ({ transactions: [...TransactionsMock] }),
   getters: {
-    incomes: (state) =>
-      state.transactions.reduce((acc, item) => (acc += getAmountFromType('income', item)), 0),
-    outcomes: (state) =>
-      state.transactions.reduce((acc, item) => (acc += getAmountFromType('outcome', item)), 0),
-    total: (state) =>
-      state.transactions.reduce(
-        (acc, item) => (item.type === 'income' ? (acc += item.amount) : acc + -item.amount),
-        0
-      ),
+    summary: (state) => {
+      return state.transactions.reduce(
+        (acc, transaction) => {
+          if (transaction.type === 'income') {
+            acc.incomes += transaction.amount;
+            acc.total += transaction.amount;
+          } else {
+            acc.outcomes += transaction.amount;
+            acc.total -= transaction.amount;
+          }
+
+          return acc;
+        },
+        {
+          incomes: 0,
+          outcomes: 0,
+          total: 0,
+        }
+      );
+    },
   },
   actions: {
     addTransaction(transaction: Transaction) {
