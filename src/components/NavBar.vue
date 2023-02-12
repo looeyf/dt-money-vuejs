@@ -1,26 +1,21 @@
 <script setup lang="ts">
 import Button from './Button.vue';
-import NewTransactionForm from './NewTransactionForm.vue';
-import Modal from './Modal.vue';
 import DtMoneyLogo from '@/assets/logo.svg?component';
-import { ref } from 'vue';
 
-const isTransactionFormModalOpen = ref<boolean>(false);
+interface Props {
+  handleToggleModal: () => void;
+}
 
-const toggleModal = () => (isTransactionFormModalOpen.value = !isTransactionFormModalOpen.value);
+const props = defineProps<Props>();
 </script>
 
 <template>
   <div v-bind="$attrs" class="navbar-container">
     <div class="navbar container">
       <DtMoneyLogo aria-label="Dt money logo" />
-      <Button @click="toggleModal">Nova transação</Button>
+      <Button @click="props.handleToggleModal">Nova transação</Button>
     </div>
   </div>
-
-  <Modal v-model:isModalOpen="isTransactionFormModalOpen">
-    <NewTransactionForm @onCreateTransaction="toggleModal" />
-  </Modal>
 </template>
 
 <style lang="scss" scoped>
