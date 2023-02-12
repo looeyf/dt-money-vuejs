@@ -7,19 +7,19 @@ import { ref } from 'vue';
 
 const isTransactionFormModalOpen = ref<boolean>(false);
 
-const handleOpenModal = () => (isTransactionFormModalOpen.value = true);
+const toggleModal = () => (isTransactionFormModalOpen.value = !isTransactionFormModalOpen.value);
 </script>
 
 <template>
   <div v-bind="$attrs" class="navbar-container">
     <div class="navbar container">
       <DtMoneyLogo aria-label="Dt money logo" />
-      <Button @click="handleOpenModal">Nova transação</Button>
+      <Button @click="toggleModal">Nova transação</Button>
     </div>
   </div>
 
   <Modal v-model:isModalOpen="isTransactionFormModalOpen">
-    <NewTransactionForm />
+    <NewTransactionForm @onCreateTransaction="toggleModal" />
   </Modal>
 </template>
 

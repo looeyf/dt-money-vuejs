@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import IncomesImg from '@/assets/incomes.svg?component';
-import OutcomesImg from '@/assets/incomes.svg?component';
-import TotalImg from '@/assets/incomes.svg?component';
+import OutcomesImg from '@/assets/outcomes.svg?component';
+import TotalImg from '@/assets/total.svg?component';
+import formatMoneyToPTBR from '@/helpers/formatMoneyToPTBR';
+import { computed } from 'vue';
 
 interface Props {
   type: 'Entradas' | 'Saídas' | 'Total';
-  value: number;
+  amount: number;
 }
 
 const props = defineProps<Props>();
+
+const formattedMoney = computed(() => formatMoneyToPTBR(props.amount).split(','));
 </script>
 
 <template>
@@ -20,7 +24,10 @@ const props = defineProps<Props>();
       <TotalImg v-else aria-label="Total" />
     </header>
 
-    <p class="card-content">R$ <b>17.400</b>,00</p>
+    <p class="card-content">
+      R$ <b>{{ formattedMoney[0] }}</b
+      >,{{ formattedMoney[1] }}
+    </p>
   </div>
 </template>
 
@@ -49,6 +56,10 @@ const props = defineProps<Props>();
   &-content {
     font-size: 2.25rem;
     line-height: 3.375rem;
+
+    > b {
+      font-weight: 500;
+    }
   }
 
   &-green {

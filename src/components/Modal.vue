@@ -50,7 +50,8 @@ watch(
 
 <style lang="scss" scoped>
 .modal {
-  position: absolute;
+  position: fixed;
+  z-index: 9999;
   top: 0;
   right: 0;
   left: 0;
@@ -65,7 +66,7 @@ watch(
     background-color: var(--background);
     padding: 4rem 3rem;
     border-radius: 4px;
-    z-index: 1010;
+    z-index: 2;
 
     .close {
       cursor: pointer;
@@ -80,7 +81,7 @@ watch(
     height: 100%;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    z-index: 1;
   }
 }
 </style>

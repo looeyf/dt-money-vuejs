@@ -1,13 +1,24 @@
 <script setup lang="ts">
 import Card from '@/components/Card.vue';
+import type { Transaction } from '@/types/common';
+import { computed } from 'vue';
+import { useTransactionsStore } from '@/stores/transactions';
+import formatDateToPTBR from '@/helpers/formatDateToPTBR';
+import formatMoneyToPTBR from '@/helpers/formatMoneyToPTBR';
+
+const transactionsStore = useTransactionsStore();
+
+const transactions = computed(() => transactionsStore.transactions);
+
+const isOutcome = (transaction: Transaction) => transaction.type === 'outcome';
 </script>
 
 <template>
   <div class="container pt-0">
     <div class="summary">
-      <Card type="Entradas" :value="17400.0" />
-      <Card type="Saídas" :value="1259.0" />
-      <Card type="Total" :value="16141.0" />
+      <Card type="Entradas" :amount="transactionsStore.incomes" />
+      <Card type="Saídas" :amount="transactionsStore.outcomes" />
+      <Card type="Total" :amount="transactionsStore.total" />
     </div>
 
     <div class="table">
@@ -18,20 +29,18 @@ import Card from '@/components/Card.vue';
         <span class="column-date">Data</span>
       </div>
 
-      <div class="table-body">
-        <div class="table-row">
-          <span class="column-title">Desenvolvimento de site</span>
-          <span :class="['column-value', 'column-value--outcome']">- R$ 12.000,00</span>
-          <span class="column-category">Venda</span>
-          <span class="column-date">13/04/2021</span>
+      <div class="table-body" v-if="transactions.length">
+        <div class="table-row" v-for="transaction in transactions" :key="transaction.id">
+          <span class="column-title">{{ transaction.title }}</span>
+          <span :class="['column-value', { 'column-value--outcome': isOutcome(transaction) }]">{{
+            formatMoneyToPTBR(transaction.amount)
+          }}</span>
+          <span class="column-category">{{ transaction.category }}</span>
+          <span class="column-date">{{ formatDateToPTBR(transaction.date) }}</span>
         </div>
-
-        <div class="table-row">
-          <span class="column-title">Desenvolvimento de site</span>
-          <span :class="['column-value']">R$ 12.000,00</span>
-          <span class="column-category">Venda</span>
-          <span class="column-date">13/04/2021</span>
-        </div>
+      </div>
+      <div class="table-empty" v-else>
+        <h4>Nenhuma transação realizada até o momento.</h4>
       </div>
     </div>
   </div>
@@ -104,6 +113,11 @@ import Card from '@/components/Card.vue';
         }
       }
     }
+  }
+
+  &-empty {
+    display: flex;
+    justify-content: center;
   }
 }
 </style>

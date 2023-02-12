@@ -1,18 +1,44 @@
 <script setup lang="ts">
+import { useTransactionsStore } from '@/stores/transactions';
+import type { Transaction } from '@/types/common';
 import Button from './Button.vue';
 import IncomeIcon from '@/assets/incomes.svg?component';
 import OutcomeIcon from '@/assets/outcomes.svg?component';
+import { ref } from 'vue';
+
+const emit = defineEmits<{
+  (event: 'onCreateTransaction'): void;
+}>();
+
+const transactionsStore = useTransactionsStore();
+
+const addNewTransaction = (transaction: Transaction) => {
+  transaction.date = new Date().toISOString();
+  transactionsStore.addTransaction(transaction);
+
+  formData.value = {} as Transaction;
+  emit('onCreateTransaction');
+};
+
+const formData = ref<Transaction>({} as Transaction);
 </script>
 
 <template>
   <h2>Cadastrar transação</h2>
 
-  <form @submit.prevent="">
-    <input type="text" placeholder="Nome" />
-    <input type="text" placeholder="Preço" />
+  <form @submit.prevent="addNewTransaction(formData)">
+    <input v-model="formData.title" type="text" placeholder="Nome" required />
+    <input v-model="formData.amount" type="number" placeholder="Preço" required />
     <div class="form-group">
       <label class="input-radio">
-        <input class="income" type="radio" name="transactionType" />
+        <input
+          v-model="formData.type"
+          class="income"
+          type="radio"
+          name="transactionType"
+          value="income"
+          required
+        />
         <span>
           <IncomeIcon aria-label="Entrada" />
           Entrada
@@ -20,16 +46,23 @@ import OutcomeIcon from '@/assets/outcomes.svg?component';
       </label>
 
       <label class="input-radio">
-        <input class="outcome" type="radio" name="transactionType" />
+        <input
+          v-model="formData.type"
+          class="outcome"
+          type="radio"
+          name="transactionType"
+          value="outcome"
+          required
+        />
         <span>
           <OutcomeIcon aria-label="Saída" />
           Saída
         </span>
       </label>
     </div>
-    <input type="text" placeholder="Categoria" />
+    <input v-model="formData.category" type="text" placeholder="Categoria" required />
 
-    <Button variant="green">Cadastrar</Button>
+    <Button variant="green" type="submit">Cadastrar</Button>
   </form>
 </template>
 
@@ -57,7 +90,8 @@ form {
     line-height: 1.5rem;
   }
 
-  input[type='text'] {
+  input[type='text'],
+  input[type='number'] {
     min-width: 30rem;
     padding: 1.25rem 1.5rem;
 
