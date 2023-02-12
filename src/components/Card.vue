@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import IncomesImg from '@/assets/incomes.svg?component';
+import OutcomesImg from '@/assets/incomes.svg?component';
+import TotalImg from '@/assets/incomes.svg?component';
 
 interface Props {
   type: 'Entradas' | 'Saídas' | 'Total';
@@ -13,9 +15,9 @@ const props = defineProps<Props>();
   <div :class="['card', { 'card-green': props.type === 'Total' }]">
     <header class="card-header">
       <span>{{ props.type }}</span>
-      <img v-if="props.type === 'Entradas'" src="@/assets/incomes.svg" alt="Entradas" />
-      <img v-else-if="props.type === 'Saídas'" src="@/assets/outcomes.svg" alt="Saídas" />
-      <img v-else src="@/assets/total.svg" alt="Total" />
+      <IncomesImg v-if="props.type === 'Entradas'" aria-label="Entradas" />
+      <OutcomesImg v-else-if="props.type === 'Saídas'" aria-label="Saídas" />
+      <TotalImg v-else aria-label="Total" />
     </header>
 
     <p class="card-content">R$ <b>17.400</b>,00</p>

@@ -1,14 +1,26 @@
 <script setup lang="ts">
 import Button from './Button.vue';
+import NewTransactionForm from './NewTransactionForm.vue';
+import Modal from './Modal.vue';
+import DtMoneyLogo from '@/assets/logo.svg?component';
+import { ref } from 'vue';
+
+const isTransactionFormModalOpen = ref<boolean>(false);
+
+const handleOpenModal = () => (isTransactionFormModalOpen.value = true);
 </script>
 
 <template>
-  <div class="navbar-container">
+  <div v-bind="$attrs" class="navbar-container">
     <div class="navbar container">
-      <img src="@/assets/logo.svg" alt="Dt money logo" />
-      <Button>Nova transação</Button>
+      <DtMoneyLogo aria-label="Dt money logo" />
+      <Button @click="handleOpenModal">Nova transação</Button>
     </div>
   </div>
+
+  <Modal v-model:isModalOpen="isTransactionFormModalOpen">
+    <NewTransactionForm />
+  </Modal>
 </template>
 
 <style lang="scss" scoped>
