@@ -11,5 +11,5 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  base: '/dt-money-vuejs/',
+  base: process.env.NODE_ENV === 'production' ? '/dt-money-vuejs/' : '/',
 });
